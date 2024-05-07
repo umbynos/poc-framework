@@ -80,8 +80,10 @@ var CompilationPayload = handler.Compilation{
 			Name: "test.ino",
 			Data: "#include <Arduino.h>\nvoid setup() {}\nvoid loop() {}",
 		},
-		Metadata: []handler.Library{},
-		Name:     "test",
+		Metadata: handler.IncludedLibraries{
+			IncludedLibrary: []handler.Library{},
+		},
+		Name: "test",
 	},
 	Verbose: false,
 }

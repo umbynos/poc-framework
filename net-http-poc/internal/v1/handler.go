@@ -9,6 +9,17 @@ import (
 	"github.com/google/uuid"
 )
 
+// Alive returns a simple message to indicate that the server is alive
+// @Summary		Get the status of the server
+// @Description	Get the status of the server
+// @Tags		status
+// @Produce		json
+// @Success		200		{object}	AliveResponse
+// @Failure		400		{object}	ErrorResponse
+// @Failure		405
+// @Failure		500
+// @Failure		503
+// @Router		/alive [get]
 func Alive(w http.ResponseWriter, r *http.Request) {
 	log.Println("I'm ALIVEEEEEEE")
 	encodeResponse(w, http.StatusOK, AliveResponse{
@@ -16,11 +27,26 @@ func Alive(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-// Create a new compilation
+// CreateCompilation adds a compilation request to the queue
 // Parse the request body to get the compilation data
-// Generate a new ID for the compilation
+// Generate a new UUID for the compilation
 // Add the compilation to the compilations queue
 // Return the created compilation as JSON
+// @Summary		Add a new compilation
+// @Description	Add a new compilation to the queue
+// @Tags		compilation
+// @Accept		json
+// @Produce		json
+// @Param		value	body		Compilation	true	"Compilation object that needs to be added to the queue"
+// @Success		201		{object}	CompilationResponse
+// @Failure		400		{object}	ErrorResponse
+// @Failure		401
+// @Failure		403
+// @Failure		405
+// @Failure		429
+// @Failure		500
+// @Failure		503
+// @Router		/compilations [post]
 func CreateCompilation(w http.ResponseWriter, r *http.Request) {
 	var compilation Compilation
 	err := json.NewDecoder(r.Body).Decode(&compilation)
@@ -47,6 +73,22 @@ func CreateCompilation(w http.ResponseWriter, r *http.Request) {
 // Find the compilation in the compilations queue
 // Update the compilation status to "cancelled"
 // Return a success message
+// @Summary		Stop a compilation
+// @Description	Stop a compilation in the queue
+// @Tags		compilation
+// @Produce		json
+// @Param		id		path 		string	true	"Compilation object that needs to be stopped"
+// @Success		200		{object}	CompilationResponse
+// @Failure		400		{object}	ErrorResponse
+// @Failure		401
+// @Failure		403
+// @Failure		404		{object}	ErrorResponse
+// @Failure		405
+// @Failure		410
+// @Failure		429
+// @Failure		500
+// @Failure		503
+// @Router		/compilations/{id}/cancel [post]
 func StopCompilation(w http.ResponseWriter, r *http.Request) {
 	uuid := r.PathValue("id")
 	if _, ok := compilationsQueue[uuid]; !ok {
@@ -70,6 +112,22 @@ func StopCompilation(w http.ResponseWriter, r *http.Request) {
 // Extract the ID from the request URL
 // Find the compilation in the compilations queue
 // Return a success message
+// @Summary		Get the status of a compilation
+// @Description	Get the status of a compilation
+// @Tags		compilation
+// @Produce		json
+// @Param		id		path 		string	true	"Compilation object we want to know the status of"
+// @Success		200		{object}	CompilationResponse
+// @Failure		400		{object}	ErrorResponse
+// @Failure		401
+// @Failure		403
+// @Failure		404		{object}	ErrorResponse
+// @Failure		405
+// @Failure		410
+// @Failure		429
+// @Failure		500
+// @Failure		503
+// @Router		/compilations/{id} [get]
 func GetCompilations(w http.ResponseWriter, r *http.Request) {
 	uuid := r.PathValue("id")
 	if _, ok := compilationsQueue[uuid]; !ok {
@@ -89,6 +147,23 @@ func GetCompilations(w http.ResponseWriter, r *http.Request) {
 // Extract the ID from the request URL
 // Find the compilation in the compilations slice
 // Return the compilation artifacts as JSON
+// @Summary		Get the compilation arfitacts
+// @Description	Get the compilation artifacts
+// @Tags		compilation
+// @Produce		json
+// @Param		id		path 		string	true	"Compilation object we want to retrieve the artifacts of"
+// @Param		type	query		string	false	"Type of artifact we want to retrieve: bin, elf, hex"
+// @Success		200		{object}	ArtifactResponse
+// @Failure		400		{object}	ErrorResponse
+// @Failure		401
+// @Failure		403
+// @Failure		404		{object}	ErrorResponse
+// @Failure		405
+// @Failure		410
+// @Failure		429
+// @Failure		500
+// @Failure		503
+// @Router		/compilations/{id}/artifacts [get]
 func GetArtifacts(w http.ResponseWriter, r *http.Request) {
 	uuid := r.PathValue("id")
 	if _, ok := compilationsQueue[uuid]; !ok {
@@ -133,6 +208,22 @@ func GetArtifacts(w http.ResponseWriter, r *http.Request) {
 // Extract the ID from the request URL
 // Find the compilation in the compilations slice
 // Return the compilation logs as JSON
+// @Summary		Get the compilation logs
+// @Description	Get the compilation logs
+// @Tags		compilation
+// @Produce		json
+// @Param		id		path 		string	true	"Compilation object we want to retrieve the logs of"
+// @Success		200		{object}	LogsResponse
+// @Failure		400		{object}	ErrorResponse
+// @Failure		401
+// @Failure		403
+// @Failure		404		{object}	ErrorResponse
+// @Failure		405
+// @Failure		410
+// @Failure		429
+// @Failure		500
+// @Failure		503
+// @Router		/compilations/{id}/logs [get]
 func GetLogs(w http.ResponseWriter, r *http.Request) {
 	uuid := r.PathValue("id")
 	if _, ok := compilationsQueue[uuid]; !ok {

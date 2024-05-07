@@ -1,5 +1,121 @@
 basePath: /v1
-host: petstore.swagger.io
+definitions:
+  handler.AliveResponse:
+    description: AliveResponse represents a response for the alive endpoint
+    properties:
+      message:
+        example: OK
+        type: string
+    type: object
+  handler.ArtifactResponse:
+    description: ArtifactResponse represents a response for a compilation artifacts
+      request
+    properties:
+      bin:
+        example: YmluYXJ5IGRhdGE=
+        type: string
+      elf:
+        example: ZWxmIGRhdGE=
+        type: string
+      hex:
+        example: aGV4IGRhdGE=
+        type: string
+      name:
+        example: test
+        type: string
+    type: object
+  handler.Compilation:
+    description: Compilation represents a compilation request
+    properties:
+      fqbn:
+        example: arduino:avr:uno
+        type: string
+      ota:
+        example: false
+        type: boolean
+      sketch:
+        allOf:
+        - $ref: '#/definitions/handler.Sketch'
+        description: "Path\tstring `json:\"path\"`"
+      verbose:
+        example: false
+        type: boolean
+    type: object
+  handler.CompilationResponse:
+    description: CompilationResponse represents a response for a compilation request
+    properties:
+      id:
+        example: 123e4567-e89b-12d3-a456-426614174000
+        type: string
+      status:
+        example: created
+        type: string
+    type: object
+  handler.ErrorResponse:
+    description: ErrorResponse represents an error response
+    properties:
+      err:
+        example: error message
+        type: string
+    type: object
+  handler.File:
+    description: File represents a file to be compiled
+    properties:
+      data:
+        example: |-
+          #include <Arduino.h>
+          void setup() {}
+          void loop() {}
+        type: string
+      name:
+        example: test.ino
+        type: string
+    type: object
+  handler.IncludedLibraries:
+    description: IncludedLibraries represents the libraries to be included in the
+      compilation
+    properties:
+      included_libs:
+        items:
+          $ref: '#/definitions/handler.Library'
+        type: array
+    type: object
+  handler.Library:
+    description: Library represents a library to be included in the compilation
+    properties:
+      name:
+        example: ArduinoJson
+        type: string
+      version:
+        example: 6.17.2
+        type: string
+    type: object
+  handler.LogsResponse:
+    description: LogsResponse represents a response for a compilation logs request
+    properties:
+      stderr:
+        example: 'Error: World not found'
+        type: string
+      stdout:
+        example: Hello, World!
+        type: string
+    type: object
+  handler.Sketch:
+    description: Sketch represents a sketch to be compiled
+    properties:
+      files:
+        items:
+          $ref: '#/definitions/handler.File'
+        type: array
+      ino:
+        $ref: '#/definitions/handler.File'
+      metadata:
+        $ref: '#/definitions/handler.IncludedLibraries'
+      name:
+        example: test
+        type: string
+    type: object
+host: localhost:8080
 info:
   contact:
     email: support@swagger.io
@@ -12,5 +128,234 @@ info:
   termsOfService: http://swagger.io/terms/
   title: Builder API Documentation
   version: "2.0"
-paths: {}
+paths:
+  /alive:
+    get:
+      description: Get the status of the server
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.AliveResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "405":
+          description: Method Not Allowed
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      summary: Get the status of the server
+      tags:
+      - status
+  /compilations:
+    post:
+      consumes:
+      - application/json
+      description: Add a new compilation to the queue
+      parameters:
+      - description: Compilation object that needs to be added to the queue
+        in: body
+        name: value
+        required: true
+        schema:
+          $ref: '#/definitions/handler.Compilation'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/handler.CompilationResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "405":
+          description: Method Not Allowed
+        "429":
+          description: Too Many Requests
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      summary: Add a new compilation
+      tags:
+      - compilation
+  /compilations/{id}:
+    get:
+      description: Get the status of a compilation
+      parameters:
+      - description: Compilation object we want to know the status of
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.CompilationResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "405":
+          description: Method Not Allowed
+        "410":
+          description: Gone
+        "429":
+          description: Too Many Requests
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      summary: Get the status of a compilation
+      tags:
+      - compilation
+  /compilations/{id}/artifacts:
+    get:
+      description: Get the compilation artifacts
+      parameters:
+      - description: Compilation object we want to retrieve the artifacts of
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 'Type of artifact we want to retrieve: bin, elf, hex'
+        in: query
+        name: type
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.ArtifactResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "405":
+          description: Method Not Allowed
+        "410":
+          description: Gone
+        "429":
+          description: Too Many Requests
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      summary: Get the compilation arfitacts
+      tags:
+      - compilation
+  /compilations/{id}/cancel:
+    post:
+      description: Stop a compilation in the queue
+      parameters:
+      - description: Compilation object that needs to be stopped
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.CompilationResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "405":
+          description: Method Not Allowed
+        "410":
+          description: Gone
+        "429":
+          description: Too Many Requests
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      summary: Stop a compilation
+      tags:
+      - compilation
+  /compilations/{id}/logs:
+    get:
+      description: Get the compilation logs
+      parameters:
+      - description: Compilation object we want to retrieve the logs of
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.LogsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "405":
+          description: Method Not Allowed
+        "410":
+          description: Gone
+        "429":
+          description: Too Many Requests
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      summary: Get the compilation logs
+      tags:
+      - compilation
 swagger: "2.0"

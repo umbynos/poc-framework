@@ -15,7 +15,515 @@
         },
         "version": "2.0"
     },
-    "host": "petstore.swagger.io",
+    "host": "localhost:8080",
     "basePath": "/v1",
-    "paths": {}
+    "paths": {
+        "/alive": {
+            "get": {
+                "description": "Get the status of the server",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "status"
+                ],
+                "summary": "Get the status of the server",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handler.AliveResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponse"
+                        }
+                    },
+                    "405": {
+                        "description": "Method Not Allowed"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    },
+                    "503": {
+                        "description": "Service Unavailable"
+                    }
+                }
+            }
+        },
+        "/compilations": {
+            "post": {
+                "description": "Add a new compilation to the queue",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "compilation"
+                ],
+                "summary": "Add a new compilation",
+                "parameters": [
+                    {
+                        "description": "Compilation object that needs to be added to the queue",
+                        "name": "value",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handler.Compilation"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/handler.CompilationResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "405": {
+                        "description": "Method Not Allowed"
+                    },
+                    "429": {
+                        "description": "Too Many Requests"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    },
+                    "503": {
+                        "description": "Service Unavailable"
+                    }
+                }
+            }
+        },
+        "/compilations/{id}": {
+            "get": {
+                "description": "Get the status of a compilation",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "compilation"
+                ],
+                "summary": "Get the status of a compilation",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Compilation object we want to know the status of",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handler.CompilationResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponse"
+                        }
+                    },
+                    "405": {
+                        "description": "Method Not Allowed"
+                    },
+                    "410": {
+                        "description": "Gone"
+                    },
+                    "429": {
+                        "description": "Too Many Requests"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    },
+                    "503": {
+                        "description": "Service Unavailable"
+                    }
+                }
+            }
+        },
+        "/compilations/{id}/artifacts": {
+            "get": {
+                "description": "Get the compilation artifacts",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "compilation"
+                ],
+                "summary": "Get the compilation arfitacts",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Compilation object we want to retrieve the artifacts of",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Type of artifact we want to retrieve: bin, elf, hex",
+                        "name": "type",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ArtifactResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponse"
+                        }
+                    },
+                    "405": {
+                        "description": "Method Not Allowed"
+                    },
+                    "410": {
+                        "description": "Gone"
+                    },
+                    "429": {
+                        "description": "Too Many Requests"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    },
+                    "503": {
+                        "description": "Service Unavailable"
+                    }
+                }
+            }
+        },
+        "/compilations/{id}/cancel": {
+            "post": {
+                "description": "Stop a compilation in the queue",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "compilation"
+                ],
+                "summary": "Stop a compilation",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Compilation object that needs to be stopped",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handler.CompilationResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponse"
+                        }
+                    },
+                    "405": {
+                        "description": "Method Not Allowed"
+                    },
+                    "410": {
+                        "description": "Gone"
+                    },
+                    "429": {
+                        "description": "Too Many Requests"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    },
+                    "503": {
+                        "description": "Service Unavailable"
+                    }
+                }
+            }
+        },
+        "/compilations/{id}/logs": {
+            "get": {
+                "description": "Get the compilation logs",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "compilation"
+                ],
+                "summary": "Get the compilation logs",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Compilation object we want to retrieve the logs of",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handler.LogsResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponse"
+                        }
+                    },
+                    "405": {
+                        "description": "Method Not Allowed"
+                    },
+                    "410": {
+                        "description": "Gone"
+                    },
+                    "429": {
+                        "description": "Too Many Requests"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    },
+                    "503": {
+                        "description": "Service Unavailable"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "handler.AliveResponse": {
+            "description": "AliveResponse represents a response for the alive endpoint",
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "example": "OK"
+                }
+            }
+        },
+        "handler.ArtifactResponse": {
+            "description": "ArtifactResponse represents a response for a compilation artifacts request",
+            "type": "object",
+            "properties": {
+                "bin": {
+                    "type": "string",
+                    "example": "YmluYXJ5IGRhdGE="
+                },
+                "elf": {
+                    "type": "string",
+                    "example": "ZWxmIGRhdGE="
+                },
+                "hex": {
+                    "type": "string",
+                    "example": "aGV4IGRhdGE="
+                },
+                "name": {
+                    "type": "string",
+                    "example": "test"
+                }
+            }
+        },
+        "handler.Compilation": {
+            "description": "Compilation represents a compilation request",
+            "type": "object",
+            "properties": {
+                "fqbn": {
+                    "type": "string",
+                    "example": "arduino:avr:uno"
+                },
+                "ota": {
+                    "type": "boolean",
+                    "example": false
+                },
+                "sketch": {
+                    "description": "Path\tstring `json:\"path\"`",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/handler.Sketch"
+                        }
+                    ]
+                },
+                "verbose": {
+                    "type": "boolean",
+                    "example": false
+                }
+            }
+        },
+        "handler.CompilationResponse": {
+            "description": "CompilationResponse represents a response for a compilation request",
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "example": "123e4567-e89b-12d3-a456-426614174000"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "created"
+                }
+            }
+        },
+        "handler.ErrorResponse": {
+            "description": "ErrorResponse represents an error response",
+            "type": "object",
+            "properties": {
+                "err": {
+                    "type": "string",
+                    "example": "error message"
+                }
+            }
+        },
+        "handler.File": {
+            "description": "File represents a file to be compiled",
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "string",
+                    "example": "#include \u003cArduino.h\u003e\nvoid setup() {}\nvoid loop() {}"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "test.ino"
+                }
+            }
+        },
+        "handler.IncludedLibraries": {
+            "description": "IncludedLibraries represents the libraries to be included in the compilation",
+            "type": "object",
+            "properties": {
+                "included_libs": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/handler.Library"
+                    }
+                }
+            }
+        },
+        "handler.Library": {
+            "description": "Library represents a library to be included in the compilation",
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "example": "ArduinoJson"
+                },
+                "version": {
+                    "type": "string",
+                    "example": "6.17.2"
+                }
+            }
+        },
+        "handler.LogsResponse": {
+            "description": "LogsResponse represents a response for a compilation logs request",
+            "type": "object",
+            "properties": {
+                "stderr": {
+                    "type": "string",
+                    "example": "Error: World not found"
+                },
+                "stdout": {
+                    "type": "string",
+                    "example": "Hello, World!"
+                }
+            }
+        },
+        "handler.Sketch": {
+            "description": "Sketch represents a sketch to be compiled",
+            "type": "object",
+            "properties": {
+                "files": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/handler.File"
+                    }
+                },
+                "ino": {
+                    "$ref": "#/definitions/handler.File"
+                },
+                "metadata": {
+                    "$ref": "#/definitions/handler.IncludedLibraries"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "test"
+                }
+            }
+        }
+    }
 }
