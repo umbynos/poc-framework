@@ -5,10 +5,58 @@ import (
 	"net/http"
 )
 
-// ErrorResponse represents an error response
-// @Description ErrorResponse represents an error response
-type ErrorResponse struct {
-	Err string `json:"err" example:"error message"`
+// ErrBadRequestResponse represents a bad request response
+// @Description ErrBadRequestResponse represents a bad request response
+type ErrBadRequestResponse struct {
+	Err string `json:"err" example:"bad request"`
+}
+
+// ErrUnauthorizedResponse represents an unauthorized response
+// @Description ErrUnauthorizedResponse represents an unauthorized response
+type ErrUnauthorizedResponse struct {
+	Err string `json:"err" example:"unauthorized"`
+}
+
+// ErrForbiddenResponse represents a forbidden response
+// @Description ErrForbiddenResponse represents a forbidden response
+type ErrForbiddenResponse struct {
+	Err string `json:"err" example:"forbidden"`
+}
+
+// ErrNotFoundResponse represents a not found response
+// @Description ErrNotFoundResponse represents a not found response
+type ErrNotFoundResponse struct {
+	Err string `json:"err" example:"not found"`
+}
+
+// ErrMethodNotAllowedResponse represents a method not allowed response
+// @Description ErrMethodNotAllowedResponse represents a method not allowed response
+type ErrMethodNotAllowedResponse struct {
+	Err string `json:"err" example:"method not allowed"`
+}
+
+// ErrGoneResponse represents a gone response
+// @Description ErrGoneResponse represents a gone response
+type ErrGoneResponse struct {
+	Err string `json:"err" example:"gone"`
+}
+
+// ErrRateLimitExceededResponse represents a rate limit exceeded response
+// @Description ErrRateLimitExceededResponse represents a rate limit exceeded response
+type ErrRateLimitExceededResponse struct {
+	Err string `json:"err" example:"rate limit exceeded"`
+}
+
+// ErrInternalServerErrorResponse represents an internal server error response
+// @Description ErrInternalServerErrorResponse represents an internal server error response
+type ErrInternalServerErrorResponse struct {
+	Err string `json:"err" example:"internal server error"`
+}
+
+// ErrServiceUnavailableResponse represents a service unavailable response
+// @Description ErrServiceUnavailableResponse represents a service unavailable response
+type ErrServiceUnavailableResponse struct {
+	Err string `json:"err" example:"service unavailable"`
 }
 
 // AliveResponse represents a response for the alive endpoint

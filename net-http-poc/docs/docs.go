@@ -44,17 +44,26 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/handler.ErrorResponse"
+                            "$ref": "#/definitions/handler.ErrBadRequestResponse"
                         }
                     },
                     "405": {
-                        "description": "Method Not Allowed"
+                        "description": "Method Not Allowed",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrMethodNotAllowedResponse"
+                        }
                     },
                     "500": {
-                        "description": "Internal Server Error"
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrInternalServerErrorResponse"
+                        }
                     },
                     "503": {
-                        "description": "Service Unavailable"
+                        "description": "Service Unavailable",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrServiceUnavailableResponse"
+                        }
                     }
                 }
             }
@@ -93,26 +102,44 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/handler.ErrorResponse"
+                            "$ref": "#/definitions/handler.ErrBadRequestResponse"
                         }
                     },
                     "401": {
-                        "description": "Unauthorized"
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrUnauthorizedResponse"
+                        }
                     },
                     "403": {
-                        "description": "Forbidden"
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrForbiddenResponse"
+                        }
                     },
                     "405": {
-                        "description": "Method Not Allowed"
+                        "description": "Method Not Allowed",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrMethodNotAllowedResponse"
+                        }
                     },
                     "429": {
-                        "description": "Too Many Requests"
+                        "description": "Too Many Requests",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrRateLimitExceededResponse"
+                        }
                     },
                     "500": {
-                        "description": "Internal Server Error"
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrInternalServerErrorResponse"
+                        }
                     },
                     "503": {
-                        "description": "Service Unavailable"
+                        "description": "Service Unavailable",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrServiceUnavailableResponse"
+                        }
                     }
                 }
             }
@@ -146,35 +173,56 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/handler.ErrorResponse"
+                            "$ref": "#/definitions/handler.ErrBadRequestResponse"
                         }
                     },
                     "401": {
-                        "description": "Unauthorized"
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrUnauthorizedResponse"
+                        }
                     },
                     "403": {
-                        "description": "Forbidden"
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrForbiddenResponse"
+                        }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/handler.ErrorResponse"
+                            "$ref": "#/definitions/handler.ErrNotFoundResponse"
                         }
                     },
                     "405": {
-                        "description": "Method Not Allowed"
+                        "description": "Method Not Allowed",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrMethodNotAllowedResponse"
+                        }
                     },
                     "410": {
-                        "description": "Gone"
+                        "description": "Gone",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrGoneResponse"
+                        }
                     },
                     "429": {
-                        "description": "Too Many Requests"
+                        "description": "Too Many Requests",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrRateLimitExceededResponse"
+                        }
                     },
                     "500": {
-                        "description": "Internal Server Error"
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrInternalServerErrorResponse"
+                        }
                     },
                     "503": {
-                        "description": "Service Unavailable"
+                        "description": "Service Unavailable",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrServiceUnavailableResponse"
+                        }
                     }
                 }
             }
@@ -214,35 +262,56 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/handler.ErrorResponse"
+                            "$ref": "#/definitions/handler.ErrBadRequestResponse"
                         }
                     },
                     "401": {
-                        "description": "Unauthorized"
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrUnauthorizedResponse"
+                        }
                     },
                     "403": {
-                        "description": "Forbidden"
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrForbiddenResponse"
+                        }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/handler.ErrorResponse"
+                            "$ref": "#/definitions/handler.ErrNotFoundResponse"
                         }
                     },
                     "405": {
-                        "description": "Method Not Allowed"
+                        "description": "Method Not Allowed",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrMethodNotAllowedResponse"
+                        }
                     },
                     "410": {
-                        "description": "Gone"
+                        "description": "Gone",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrGoneResponse"
+                        }
                     },
                     "429": {
-                        "description": "Too Many Requests"
+                        "description": "Too Many Requests",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrRateLimitExceededResponse"
+                        }
                     },
                     "500": {
-                        "description": "Internal Server Error"
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrInternalServerErrorResponse"
+                        }
                     },
                     "503": {
-                        "description": "Service Unavailable"
+                        "description": "Service Unavailable",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrServiceUnavailableResponse"
+                        }
                     }
                 }
             }
@@ -276,35 +345,56 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/handler.ErrorResponse"
+                            "$ref": "#/definitions/handler.ErrBadRequestResponse"
                         }
                     },
                     "401": {
-                        "description": "Unauthorized"
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrUnauthorizedResponse"
+                        }
                     },
                     "403": {
-                        "description": "Forbidden"
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrForbiddenResponse"
+                        }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/handler.ErrorResponse"
+                            "$ref": "#/definitions/handler.ErrNotFoundResponse"
                         }
                     },
                     "405": {
-                        "description": "Method Not Allowed"
+                        "description": "Method Not Allowed",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrMethodNotAllowedResponse"
+                        }
                     },
                     "410": {
-                        "description": "Gone"
+                        "description": "Gone",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrGoneResponse"
+                        }
                     },
                     "429": {
-                        "description": "Too Many Requests"
+                        "description": "Too Many Requests",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrRateLimitExceededResponse"
+                        }
                     },
                     "500": {
-                        "description": "Internal Server Error"
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrInternalServerErrorResponse"
+                        }
                     },
                     "503": {
-                        "description": "Service Unavailable"
+                        "description": "Service Unavailable",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrServiceUnavailableResponse"
+                        }
                     }
                 }
             }
@@ -338,35 +428,56 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/handler.ErrorResponse"
+                            "$ref": "#/definitions/handler.ErrBadRequestResponse"
                         }
                     },
                     "401": {
-                        "description": "Unauthorized"
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrUnauthorizedResponse"
+                        }
                     },
                     "403": {
-                        "description": "Forbidden"
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrForbiddenResponse"
+                        }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/handler.ErrorResponse"
+                            "$ref": "#/definitions/handler.ErrNotFoundResponse"
                         }
                     },
                     "405": {
-                        "description": "Method Not Allowed"
+                        "description": "Method Not Allowed",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrMethodNotAllowedResponse"
+                        }
                     },
                     "410": {
-                        "description": "Gone"
+                        "description": "Gone",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrGoneResponse"
+                        }
                     },
                     "429": {
-                        "description": "Too Many Requests"
+                        "description": "Too Many Requests",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrRateLimitExceededResponse"
+                        }
                     },
                     "500": {
-                        "description": "Internal Server Error"
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrInternalServerErrorResponse"
+                        }
                     },
                     "503": {
-                        "description": "Service Unavailable"
+                        "description": "Service Unavailable",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrServiceUnavailableResponse"
+                        }
                     }
                 }
             }
@@ -445,13 +556,93 @@ const docTemplate = `{
                 }
             }
         },
-        "handler.ErrorResponse": {
-            "description": "ErrorResponse represents an error response",
+        "handler.ErrBadRequestResponse": {
+            "description": "ErrBadRequestResponse represents a bad request response",
             "type": "object",
             "properties": {
                 "err": {
                     "type": "string",
-                    "example": "error message"
+                    "example": "bad request"
+                }
+            }
+        },
+        "handler.ErrForbiddenResponse": {
+            "description": "ErrForbiddenResponse represents a forbidden response",
+            "type": "object",
+            "properties": {
+                "err": {
+                    "type": "string",
+                    "example": "forbidden"
+                }
+            }
+        },
+        "handler.ErrGoneResponse": {
+            "description": "ErrGoneResponse represents a gone response",
+            "type": "object",
+            "properties": {
+                "err": {
+                    "type": "string",
+                    "example": "gone"
+                }
+            }
+        },
+        "handler.ErrInternalServerErrorResponse": {
+            "description": "ErrInternalServerErrorResponse represents an internal server error response",
+            "type": "object",
+            "properties": {
+                "err": {
+                    "type": "string",
+                    "example": "internal server error"
+                }
+            }
+        },
+        "handler.ErrMethodNotAllowedResponse": {
+            "description": "ErrMethodNotAllowedResponse represents a method not allowed response",
+            "type": "object",
+            "properties": {
+                "err": {
+                    "type": "string",
+                    "example": "method not allowed"
+                }
+            }
+        },
+        "handler.ErrNotFoundResponse": {
+            "description": "ErrNotFoundResponse represents a not found response",
+            "type": "object",
+            "properties": {
+                "err": {
+                    "type": "string",
+                    "example": "not found"
+                }
+            }
+        },
+        "handler.ErrRateLimitExceededResponse": {
+            "description": "ErrRateLimitExceededResponse represents a rate limit exceeded response",
+            "type": "object",
+            "properties": {
+                "err": {
+                    "type": "string",
+                    "example": "rate limit exceeded"
+                }
+            }
+        },
+        "handler.ErrServiceUnavailableResponse": {
+            "description": "ErrServiceUnavailableResponse represents a service unavailable response",
+            "type": "object",
+            "properties": {
+                "err": {
+                    "type": "string",
+                    "example": "service unavailable"
+                }
+            }
+        },
+        "handler.ErrUnauthorizedResponse": {
+            "description": "ErrUnauthorizedResponse represents an unauthorized response",
+            "type": "object",
+            "properties": {
+                "err": {
+                    "type": "string",
+                    "example": "unauthorized"
                 }
             }
         },

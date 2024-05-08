@@ -51,11 +51,68 @@ definitions:
         example: created
         type: string
     type: object
-  handler.ErrorResponse:
-    description: ErrorResponse represents an error response
+  handler.ErrBadRequestResponse:
+    description: ErrBadRequestResponse represents a bad request response
     properties:
       err:
-        example: error message
+        example: bad request
+        type: string
+    type: object
+  handler.ErrForbiddenResponse:
+    description: ErrForbiddenResponse represents a forbidden response
+    properties:
+      err:
+        example: forbidden
+        type: string
+    type: object
+  handler.ErrGoneResponse:
+    description: ErrGoneResponse represents a gone response
+    properties:
+      err:
+        example: gone
+        type: string
+    type: object
+  handler.ErrInternalServerErrorResponse:
+    description: ErrInternalServerErrorResponse represents an internal server error
+      response
+    properties:
+      err:
+        example: internal server error
+        type: string
+    type: object
+  handler.ErrMethodNotAllowedResponse:
+    description: ErrMethodNotAllowedResponse represents a method not allowed response
+    properties:
+      err:
+        example: method not allowed
+        type: string
+    type: object
+  handler.ErrNotFoundResponse:
+    description: ErrNotFoundResponse represents a not found response
+    properties:
+      err:
+        example: not found
+        type: string
+    type: object
+  handler.ErrRateLimitExceededResponse:
+    description: ErrRateLimitExceededResponse represents a rate limit exceeded response
+    properties:
+      err:
+        example: rate limit exceeded
+        type: string
+    type: object
+  handler.ErrServiceUnavailableResponse:
+    description: ErrServiceUnavailableResponse represents a service unavailable response
+    properties:
+      err:
+        example: service unavailable
+        type: string
+    type: object
+  handler.ErrUnauthorizedResponse:
+    description: ErrUnauthorizedResponse represents an unauthorized response
+    properties:
+      err:
+        example: unauthorized
         type: string
     type: object
   handler.File:
@@ -142,13 +199,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/handler.ErrorResponse'
+            $ref: '#/definitions/handler.ErrBadRequestResponse'
         "405":
           description: Method Not Allowed
+          schema:
+            $ref: '#/definitions/handler.ErrMethodNotAllowedResponse'
         "500":
           description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrInternalServerErrorResponse'
         "503":
           description: Service Unavailable
+          schema:
+            $ref: '#/definitions/handler.ErrServiceUnavailableResponse'
       summary: Get the status of the server
       tags:
       - status
@@ -174,19 +237,31 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/handler.ErrorResponse'
+            $ref: '#/definitions/handler.ErrBadRequestResponse'
         "401":
           description: Unauthorized
+          schema:
+            $ref: '#/definitions/handler.ErrUnauthorizedResponse'
         "403":
           description: Forbidden
+          schema:
+            $ref: '#/definitions/handler.ErrForbiddenResponse'
         "405":
           description: Method Not Allowed
+          schema:
+            $ref: '#/definitions/handler.ErrMethodNotAllowedResponse'
         "429":
           description: Too Many Requests
+          schema:
+            $ref: '#/definitions/handler.ErrRateLimitExceededResponse'
         "500":
           description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrInternalServerErrorResponse'
         "503":
           description: Service Unavailable
+          schema:
+            $ref: '#/definitions/handler.ErrServiceUnavailableResponse'
       summary: Add a new compilation
       tags:
       - compilation
@@ -209,25 +284,39 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/handler.ErrorResponse'
+            $ref: '#/definitions/handler.ErrBadRequestResponse'
         "401":
           description: Unauthorized
+          schema:
+            $ref: '#/definitions/handler.ErrUnauthorizedResponse'
         "403":
           description: Forbidden
+          schema:
+            $ref: '#/definitions/handler.ErrForbiddenResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/handler.ErrorResponse'
+            $ref: '#/definitions/handler.ErrNotFoundResponse'
         "405":
           description: Method Not Allowed
+          schema:
+            $ref: '#/definitions/handler.ErrMethodNotAllowedResponse'
         "410":
           description: Gone
+          schema:
+            $ref: '#/definitions/handler.ErrGoneResponse'
         "429":
           description: Too Many Requests
+          schema:
+            $ref: '#/definitions/handler.ErrRateLimitExceededResponse'
         "500":
           description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrInternalServerErrorResponse'
         "503":
           description: Service Unavailable
+          schema:
+            $ref: '#/definitions/handler.ErrServiceUnavailableResponse'
       summary: Get the status of a compilation
       tags:
       - compilation
@@ -254,25 +343,39 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/handler.ErrorResponse'
+            $ref: '#/definitions/handler.ErrBadRequestResponse'
         "401":
           description: Unauthorized
+          schema:
+            $ref: '#/definitions/handler.ErrUnauthorizedResponse'
         "403":
           description: Forbidden
+          schema:
+            $ref: '#/definitions/handler.ErrForbiddenResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/handler.ErrorResponse'
+            $ref: '#/definitions/handler.ErrNotFoundResponse'
         "405":
           description: Method Not Allowed
+          schema:
+            $ref: '#/definitions/handler.ErrMethodNotAllowedResponse'
         "410":
           description: Gone
+          schema:
+            $ref: '#/definitions/handler.ErrGoneResponse'
         "429":
           description: Too Many Requests
+          schema:
+            $ref: '#/definitions/handler.ErrRateLimitExceededResponse'
         "500":
           description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrInternalServerErrorResponse'
         "503":
           description: Service Unavailable
+          schema:
+            $ref: '#/definitions/handler.ErrServiceUnavailableResponse'
       summary: Get the compilation arfitacts
       tags:
       - compilation
@@ -295,25 +398,39 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/handler.ErrorResponse'
+            $ref: '#/definitions/handler.ErrBadRequestResponse'
         "401":
           description: Unauthorized
+          schema:
+            $ref: '#/definitions/handler.ErrUnauthorizedResponse'
         "403":
           description: Forbidden
+          schema:
+            $ref: '#/definitions/handler.ErrForbiddenResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/handler.ErrorResponse'
+            $ref: '#/definitions/handler.ErrNotFoundResponse'
         "405":
           description: Method Not Allowed
+          schema:
+            $ref: '#/definitions/handler.ErrMethodNotAllowedResponse'
         "410":
           description: Gone
+          schema:
+            $ref: '#/definitions/handler.ErrGoneResponse'
         "429":
           description: Too Many Requests
+          schema:
+            $ref: '#/definitions/handler.ErrRateLimitExceededResponse'
         "500":
           description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrInternalServerErrorResponse'
         "503":
           description: Service Unavailable
+          schema:
+            $ref: '#/definitions/handler.ErrServiceUnavailableResponse'
       summary: Stop a compilation
       tags:
       - compilation
@@ -336,25 +453,39 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/handler.ErrorResponse'
+            $ref: '#/definitions/handler.ErrBadRequestResponse'
         "401":
           description: Unauthorized
+          schema:
+            $ref: '#/definitions/handler.ErrUnauthorizedResponse'
         "403":
           description: Forbidden
+          schema:
+            $ref: '#/definitions/handler.ErrForbiddenResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/handler.ErrorResponse'
+            $ref: '#/definitions/handler.ErrNotFoundResponse'
         "405":
           description: Method Not Allowed
+          schema:
+            $ref: '#/definitions/handler.ErrMethodNotAllowedResponse'
         "410":
           description: Gone
+          schema:
+            $ref: '#/definitions/handler.ErrGoneResponse'
         "429":
           description: Too Many Requests
+          schema:
+            $ref: '#/definitions/handler.ErrRateLimitExceededResponse'
         "500":
           description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrInternalServerErrorResponse'
         "503":
           description: Service Unavailable
+          schema:
+            $ref: '#/definitions/handler.ErrServiceUnavailableResponse'
       summary: Get the compilation logs
       tags:
       - compilation
