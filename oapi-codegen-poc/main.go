@@ -8,12 +8,13 @@ import (
 	"net/http"
 	"oapi-codegen-poc/api"
 	"os"
-
-	middleware "github.com/oapi-codegen/nethttp-middleware"
 )
 
 //go:embed static
 var content embed.FS
+
+//go:embed api.yaml
+var apiSpec embed.FS
 
 func main() {
 
@@ -33,14 +34,20 @@ func main() {
 	r := http.NewServeMux()
 
 	// get an `http.Handler` that we can use
-	h := api.HandlerFromMux(server, r)
+	h := api.HandlerFromMuxWithBaseURL(server, r, "/v1")
 
 	fsys, _ := fs.Sub(content, "static")
+	apiSpecFile, _ := fs.ReadFile(apiSpec, "api.yaml")
+
+	r.HandleFunc("GET /api.yaml", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/x-yaml")
+		w.Write(apiSpecFile)
+	}))
 	r.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.FS(fsys))))
 
 	// Use our validation middleware to check all requests against the
 	// OpenAPI schema.
-	h = middleware.OapiRequestValidator(swagger)(h)
+	// h = middleware.OapiRequestValidator(swagger)(h)
 
 	s := &http.Server{
 		Handler: h,
