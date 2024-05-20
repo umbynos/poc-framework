@@ -66,19 +66,54 @@ func (s *CompilationsQueue) PostCompilations(w http.ResponseWriter, r *http.Requ
 
 // Get the status of a compilation
 // (GET /compilations/{id})
-func (s *CompilationsQueue) GetCompilationsId(w http.ResponseWriter, r *http.Request, id string) {}
+func (s *CompilationsQueue) GetCompilationsId(w http.ResponseWriter, r *http.Request, id string) {
+	if _, ok := s.Compilation[id]; !ok {
+		w.WriteHeader(http.StatusNotFound)
+		errStr := "Compilation not found"
+		json.NewEncoder(w).Encode(HandlerErrNotFoundResponse{
+			Err: &errStr,
+		})
+		return
+	}
+	status := s.Compilation[id].Status
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(HandlerCompilationResponse{
+		Id:     &id,
+		Status: &status,
+	})
+}
 
 // Get the compilation arfitacts
 // (GET /compilations/{id}/artifacts)
 func (s *CompilationsQueue) GetCompilationsIdArtifacts(w http.ResponseWriter, r *http.Request, id string, params GetCompilationsIdArtifactsParams) {
+	// TODO
 }
 
 // Stop a compilation
 // (POST /compilations/{id}/cancel)
 func (s *CompilationsQueue) PostCompilationsIdCancel(w http.ResponseWriter, r *http.Request, id string) {
+	if _, ok := s.Compilation[id]; !ok {
+		w.WriteHeader(http.StatusNotFound)
+		errStr := "Compilation not found"
+		json.NewEncoder(w).Encode(HandlerErrNotFoundResponse{
+			Err: &errStr,
+		})
+		return
+	}
+	status := "cancelled"
+	s.Compilation[id] = CompilationStatus{
+		Compilation: s.Compilation[id].Compilation,
+		Status:      status,
+	}
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(HandlerCompilationResponse{
+		Id:     &id,
+		Status: &status,
+	})
 }
 
 // Get the compilation logs
 // (GET /compilations/{id}/logs)
 func (s *CompilationsQueue) GetCompilationsIdLogs(w http.ResponseWriter, r *http.Request, id string) {
+	// TODO
 }
