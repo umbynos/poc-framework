@@ -23,4 +23,4 @@ Otherwise `std-http-server` is not yet available
 `go run net-http-poc`
 
 ## Navigate to the doc
-http://localhost:8080/v1/docs/index.html
+http://localhost:8080/static/swagger-ui/
