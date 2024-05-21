@@ -1,6 +1,7 @@
 package api
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"net/http"
 
@@ -86,7 +87,49 @@ func (s *CompilationsQueue) GetCompilationsId(w http.ResponseWriter, r *http.Req
 // Get the compilation arfitacts
 // (GET /compilations/{id}/artifacts)
 func (s *CompilationsQueue) GetCompilationsIdArtifacts(w http.ResponseWriter, r *http.Request, id string, params GetCompilationsIdArtifactsParams) {
-	// TODO
+	if _, ok := s.Compilation[id]; !ok {
+		w.WriteHeader(http.StatusNotFound)
+		errStr := "Compilation not found"
+		json.NewEncoder(w).Encode(HandlerErrNotFoundResponse{
+			Err: &errStr,
+		})
+		return
+	}
+
+	name := "test"
+	binContent := base64.RawStdEncoding.EncodeToString([]byte("binary dat"))
+	elfContent := base64.RawStdEncoding.EncodeToString([]byte("elf data"))
+	hexContent := base64.RawStdEncoding.EncodeToString([]byte("hex data"))
+
+	switch *params.Type {
+	case "bin":
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(HandlerArtifactResponse{
+			Name: &name,
+			Bin:  &binContent,
+		})
+	case "elf":
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(HandlerArtifactResponse{
+			Name: &name,
+			Elf:  &elfContent,
+		})
+	case "hex":
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(HandlerArtifactResponse{
+			Name: &name,
+			Hex:  &hexContent,
+		})
+	default:
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(HandlerArtifactResponse{
+			Name: &name,
+			Bin:  &binContent,
+			Elf:  &elfContent,
+			Hex:  &hexContent,
+		})
+	}
+
 }
 
 // Stop a compilation
@@ -115,5 +158,18 @@ func (s *CompilationsQueue) PostCompilationsIdCancel(w http.ResponseWriter, r *h
 // Get the compilation logs
 // (GET /compilations/{id}/logs)
 func (s *CompilationsQueue) GetCompilationsIdLogs(w http.ResponseWriter, r *http.Request, id string) {
-	// TODO
+	if _, ok := s.Compilation[id]; !ok {
+		w.WriteHeader(http.StatusNotFound)
+		errStr := "Compilation not found"
+		json.NewEncoder(w).Encode(HandlerErrNotFoundResponse{
+			Err: &errStr,
+		})
+		return
+	}
+	stdoutContent := "stdout"
+	stderrContent := "stderr"
+	json.NewEncoder(w).Encode(HandlerLogsResponse{
+		Stdout: &stdoutContent,
+		Stderr: &stderrContent,
+	})
 }
