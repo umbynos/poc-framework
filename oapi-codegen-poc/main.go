@@ -31,10 +31,12 @@ func main() {
 	// create a type that satisfies the `api.ServerInterface`, which contains an implementation of every operation from the generated code
 	server := api.NewCompilationQueue()
 
+	serverStrictHandler := api.NewStrictHandler(server, nil)
+
 	r := http.NewServeMux()
 
 	// get an `http.Handler` that we can use
-	h := api.HandlerFromMuxWithBaseURL(server, r, "/v1")
+	h := api.HandlerFromMuxWithBaseURL(serverStrictHandler, r, "/v1")
 
 	fsys, _ := fs.Sub(content, "static")
 	apiSpecFile, _ := fs.ReadFile(apiSpec, "api.yaml")

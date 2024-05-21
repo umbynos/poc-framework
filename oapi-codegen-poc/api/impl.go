@@ -1,9 +1,8 @@
 package api
 
 import (
+	"context"
 	"encoding/base64"
-	"encoding/json"
-	"net/http"
 
 	"github.com/google/uuid"
 )
@@ -25,151 +24,106 @@ func NewCompilationQueue() *CompilationsQueue {
 	}
 }
 
-var _ ServerInterface = (*CompilationsQueue)(nil)
+var _ StrictServerInterface = (*CompilationsQueue)(nil)
 
 // Get the status of the server
 // (GET /alive)
-func (s *CompilationsQueue) GetAlive(w http.ResponseWriter, r *http.Request) {
+func (s *CompilationsQueue) GetAlive(ctx context.Context, request GetAliveRequestObject) (GetAliveResponseObject, error) {
 	result := "OK"
-	resp := HandlerAliveResponse{
-		Message: &result,
-	}
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(resp)
+	return GetAlive200JSONResponse{Message: &result}, nil
 }
 
 // Add a new compilation
 // (POST /compilations)
-func (s *CompilationsQueue) PostCompilations(w http.ResponseWriter, r *http.Request) {
-	var compilation HandlerCompilation
-	err := json.NewDecoder(r.Body).Decode(&compilation)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		errStr := err.Error()
-		json.NewEncoder(w).Encode(HandlerErrBadRequestResponse{
-			Err: &errStr,
-		})
-		return
-	}
+func (s *CompilationsQueue) PostCompilations(ctx context.Context, request PostCompilationsRequestObject) (PostCompilationsResponseObject, error) {
+	compilation := request.Body
 	uuid := uuid.New()
 	statusCreated := "created"
 	s.Compilation[uuid.String()] = CompilationStatus{
-		Compilation: compilation,
+		Compilation: *compilation,
 		Status:      statusCreated,
 	}
-	w.WriteHeader(http.StatusCreated)
 	uuidStr := uuid.String()
-	json.NewEncoder(w).Encode(HandlerCompilationResponse{
-		Id:     &uuidStr,
-		Status: &statusCreated,
-	})
+	return PostCompilations201JSONResponse{Id: &uuidStr, Status: &statusCreated}, nil
 }
 
 // Get the status of a compilation
 // (GET /compilations/{id})
-func (s *CompilationsQueue) GetCompilationsId(w http.ResponseWriter, r *http.Request, id string) {
-	if _, ok := s.Compilation[id]; !ok {
-		w.WriteHeader(http.StatusNotFound)
+func (s *CompilationsQueue) GetCompilationsId(ctx context.Context, request GetCompilationsIdRequestObject) (GetCompilationsIdResponseObject, error) {
+	if _, ok := s.Compilation[request.Id]; !ok {
 		errStr := "Compilation not found"
-		json.NewEncoder(w).Encode(HandlerErrNotFoundResponse{
-			Err: &errStr,
-		})
-		return
+		return GetCompilationsId404JSONResponse{Err: &errStr}, nil
 	}
-	status := s.Compilation[id].Status
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(HandlerCompilationResponse{
-		Id:     &id,
-		Status: &status,
-	})
+	status := s.Compilation[request.Id].Status
+	return GetCompilationsId200JSONResponse{Id: &request.Id, Status: &status}, nil
 }
 
 // Get the compilation arfitacts
 // (GET /compilations/{id}/artifacts)
-func (s *CompilationsQueue) GetCompilationsIdArtifacts(w http.ResponseWriter, r *http.Request, id string, params GetCompilationsIdArtifactsParams) {
-	if _, ok := s.Compilation[id]; !ok {
-		w.WriteHeader(http.StatusNotFound)
+func (s *CompilationsQueue) GetCompilationsIdArtifacts(ctx context.Context, request GetCompilationsIdArtifactsRequestObject) (GetCompilationsIdArtifactsResponseObject, error) {
+	if _, ok := s.Compilation[request.Id]; !ok {
 		errStr := "Compilation not found"
-		json.NewEncoder(w).Encode(HandlerErrNotFoundResponse{
-			Err: &errStr,
-		})
-		return
+		return GetCompilationsIdArtifacts404JSONResponse{Err: &errStr}, nil
 	}
 
 	name := "test"
 	binContent := base64.RawStdEncoding.EncodeToString([]byte("binary dat"))
 	elfContent := base64.RawStdEncoding.EncodeToString([]byte("elf data"))
 	hexContent := base64.RawStdEncoding.EncodeToString([]byte("hex data"))
+	binType := *request.Params.Type
 
-	switch *params.Type {
+	switch binType {
 	case "bin":
-		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(HandlerArtifactResponse{
+		return GetCompilationsIdArtifacts200JSONResponse{
 			Name: &name,
 			Bin:  &binContent,
-		})
+		}, nil
 	case "elf":
-		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(HandlerArtifactResponse{
+		return GetCompilationsIdArtifacts200JSONResponse{
 			Name: &name,
 			Elf:  &elfContent,
-		})
+		}, nil
 	case "hex":
-		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(HandlerArtifactResponse{
+		return GetCompilationsIdArtifacts200JSONResponse{
 			Name: &name,
 			Hex:  &hexContent,
-		})
+		}, nil
 	default:
-		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(HandlerArtifactResponse{
+		return GetCompilationsIdArtifacts200JSONResponse{
 			Name: &name,
 			Bin:  &binContent,
 			Elf:  &elfContent,
 			Hex:  &hexContent,
-		})
+		}, nil
 	}
-
 }
 
 // Stop a compilation
 // (POST /compilations/{id}/cancel)
-func (s *CompilationsQueue) PostCompilationsIdCancel(w http.ResponseWriter, r *http.Request, id string) {
-	if _, ok := s.Compilation[id]; !ok {
-		w.WriteHeader(http.StatusNotFound)
+func (s *CompilationsQueue) PostCompilationsIdCancel(ctx context.Context, request PostCompilationsIdCancelRequestObject) (PostCompilationsIdCancelResponseObject, error) {
+	if _, ok := s.Compilation[request.Id]; !ok {
 		errStr := "Compilation not found"
-		json.NewEncoder(w).Encode(HandlerErrNotFoundResponse{
-			Err: &errStr,
-		})
-		return
+		return PostCompilationsIdCancel404JSONResponse{Err: &errStr}, nil
 	}
 	status := "cancelled"
-	s.Compilation[id] = CompilationStatus{
-		Compilation: s.Compilation[id].Compilation,
+	s.Compilation[request.Id] = CompilationStatus{
+		Compilation: s.Compilation[request.Id].Compilation,
 		Status:      status,
 	}
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(HandlerCompilationResponse{
-		Id:     &id,
-		Status: &status,
-	})
+	return PostCompilationsIdCancel200JSONResponse{Id: &request.Id, Status: &status}, nil
 }
 
 // Get the compilation logs
 // (GET /compilations/{id}/logs)
-func (s *CompilationsQueue) GetCompilationsIdLogs(w http.ResponseWriter, r *http.Request, id string) {
-	if _, ok := s.Compilation[id]; !ok {
-		w.WriteHeader(http.StatusNotFound)
+func (s *CompilationsQueue) GetCompilationsIdLogs(ctx context.Context, request GetCompilationsIdLogsRequestObject) (GetCompilationsIdLogsResponseObject, error) {
+	if _, ok := s.Compilation[request.Id]; !ok {
 		errStr := "Compilation not found"
-		json.NewEncoder(w).Encode(HandlerErrNotFoundResponse{
-			Err: &errStr,
-		})
-		return
+		return GetCompilationsIdLogs404JSONResponse{Err: &errStr}, nil
 	}
 	stdoutContent := "stdout"
 	stderrContent := "stderr"
-	json.NewEncoder(w).Encode(HandlerLogsResponse{
+	return GetCompilationsIdLogs200JSONResponse{
 		Stdout: &stdoutContent,
 		Stderr: &stderrContent,
-	})
+	}, nil
 }

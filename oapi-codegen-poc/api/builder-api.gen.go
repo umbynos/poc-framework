@@ -8,7 +8,9 @@ package api
 import (
 	"bytes"
 	"compress/gzip"
+	"context"
 	"encoding/base64"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -17,6 +19,7 @@ import (
 
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/oapi-codegen/runtime"
+	strictnethttp "github.com/oapi-codegen/runtime/strictmiddleware/nethttp"
 )
 
 // HandlerAliveResponse AliveResponse represents a response for the alive endpoint
@@ -435,6 +438,742 @@ func HandlerWithOptions(si ServerInterface, options StdHTTPServerOptions) http.H
 	m.HandleFunc("GET "+options.BaseURL+"/compilations/{id}/logs", wrapper.GetCompilationsIdLogs)
 
 	return m
+}
+
+type GetAliveRequestObject struct {
+}
+
+type GetAliveResponseObject interface {
+	VisitGetAliveResponse(w http.ResponseWriter) error
+}
+
+type GetAlive200JSONResponse HandlerAliveResponse
+
+func (response GetAlive200JSONResponse) VisitGetAliveResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetAlive400JSONResponse HandlerErrBadRequestResponse
+
+func (response GetAlive400JSONResponse) VisitGetAliveResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(400)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetAlive405JSONResponse HandlerErrMethodNotAllowedResponse
+
+func (response GetAlive405JSONResponse) VisitGetAliveResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(405)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetAlive500JSONResponse HandlerErrInternalServerErrorResponse
+
+func (response GetAlive500JSONResponse) VisitGetAliveResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetAlive503JSONResponse HandlerErrServiceUnavailableResponse
+
+func (response GetAlive503JSONResponse) VisitGetAliveResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type PostCompilationsRequestObject struct {
+	Body *PostCompilationsJSONRequestBody
+}
+
+type PostCompilationsResponseObject interface {
+	VisitPostCompilationsResponse(w http.ResponseWriter) error
+}
+
+type PostCompilations201JSONResponse HandlerCompilationResponse
+
+func (response PostCompilations201JSONResponse) VisitPostCompilationsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(201)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type PostCompilations400JSONResponse HandlerErrBadRequestResponse
+
+func (response PostCompilations400JSONResponse) VisitPostCompilationsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(400)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type PostCompilations401JSONResponse HandlerErrUnauthorizedResponse
+
+func (response PostCompilations401JSONResponse) VisitPostCompilationsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type PostCompilations403JSONResponse HandlerErrForbiddenResponse
+
+func (response PostCompilations403JSONResponse) VisitPostCompilationsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type PostCompilations405JSONResponse HandlerErrMethodNotAllowedResponse
+
+func (response PostCompilations405JSONResponse) VisitPostCompilationsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(405)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type PostCompilations429JSONResponse HandlerErrRateLimitExceededResponse
+
+func (response PostCompilations429JSONResponse) VisitPostCompilationsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type PostCompilations500JSONResponse HandlerErrInternalServerErrorResponse
+
+func (response PostCompilations500JSONResponse) VisitPostCompilationsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type PostCompilations503JSONResponse HandlerErrServiceUnavailableResponse
+
+func (response PostCompilations503JSONResponse) VisitPostCompilationsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetCompilationsIdRequestObject struct {
+	Id string `json:"id"`
+}
+
+type GetCompilationsIdResponseObject interface {
+	VisitGetCompilationsIdResponse(w http.ResponseWriter) error
+}
+
+type GetCompilationsId200JSONResponse HandlerCompilationResponse
+
+func (response GetCompilationsId200JSONResponse) VisitGetCompilationsIdResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetCompilationsId400JSONResponse HandlerErrBadRequestResponse
+
+func (response GetCompilationsId400JSONResponse) VisitGetCompilationsIdResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(400)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetCompilationsId401JSONResponse HandlerErrUnauthorizedResponse
+
+func (response GetCompilationsId401JSONResponse) VisitGetCompilationsIdResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetCompilationsId403JSONResponse HandlerErrForbiddenResponse
+
+func (response GetCompilationsId403JSONResponse) VisitGetCompilationsIdResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetCompilationsId404JSONResponse HandlerErrNotFoundResponse
+
+func (response GetCompilationsId404JSONResponse) VisitGetCompilationsIdResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetCompilationsId405JSONResponse HandlerErrMethodNotAllowedResponse
+
+func (response GetCompilationsId405JSONResponse) VisitGetCompilationsIdResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(405)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetCompilationsId410JSONResponse HandlerErrGoneResponse
+
+func (response GetCompilationsId410JSONResponse) VisitGetCompilationsIdResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(410)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetCompilationsId429JSONResponse HandlerErrRateLimitExceededResponse
+
+func (response GetCompilationsId429JSONResponse) VisitGetCompilationsIdResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetCompilationsId500JSONResponse HandlerErrInternalServerErrorResponse
+
+func (response GetCompilationsId500JSONResponse) VisitGetCompilationsIdResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetCompilationsId503JSONResponse HandlerErrServiceUnavailableResponse
+
+func (response GetCompilationsId503JSONResponse) VisitGetCompilationsIdResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetCompilationsIdArtifactsRequestObject struct {
+	Id     string `json:"id"`
+	Params GetCompilationsIdArtifactsParams
+}
+
+type GetCompilationsIdArtifactsResponseObject interface {
+	VisitGetCompilationsIdArtifactsResponse(w http.ResponseWriter) error
+}
+
+type GetCompilationsIdArtifacts200JSONResponse HandlerArtifactResponse
+
+func (response GetCompilationsIdArtifacts200JSONResponse) VisitGetCompilationsIdArtifactsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetCompilationsIdArtifacts400JSONResponse HandlerErrBadRequestResponse
+
+func (response GetCompilationsIdArtifacts400JSONResponse) VisitGetCompilationsIdArtifactsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(400)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetCompilationsIdArtifacts401JSONResponse HandlerErrUnauthorizedResponse
+
+func (response GetCompilationsIdArtifacts401JSONResponse) VisitGetCompilationsIdArtifactsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetCompilationsIdArtifacts403JSONResponse HandlerErrForbiddenResponse
+
+func (response GetCompilationsIdArtifacts403JSONResponse) VisitGetCompilationsIdArtifactsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetCompilationsIdArtifacts404JSONResponse HandlerErrNotFoundResponse
+
+func (response GetCompilationsIdArtifacts404JSONResponse) VisitGetCompilationsIdArtifactsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetCompilationsIdArtifacts405JSONResponse HandlerErrMethodNotAllowedResponse
+
+func (response GetCompilationsIdArtifacts405JSONResponse) VisitGetCompilationsIdArtifactsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(405)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetCompilationsIdArtifacts410JSONResponse HandlerErrGoneResponse
+
+func (response GetCompilationsIdArtifacts410JSONResponse) VisitGetCompilationsIdArtifactsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(410)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetCompilationsIdArtifacts429JSONResponse HandlerErrRateLimitExceededResponse
+
+func (response GetCompilationsIdArtifacts429JSONResponse) VisitGetCompilationsIdArtifactsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetCompilationsIdArtifacts500JSONResponse HandlerErrInternalServerErrorResponse
+
+func (response GetCompilationsIdArtifacts500JSONResponse) VisitGetCompilationsIdArtifactsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetCompilationsIdArtifacts503JSONResponse HandlerErrServiceUnavailableResponse
+
+func (response GetCompilationsIdArtifacts503JSONResponse) VisitGetCompilationsIdArtifactsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type PostCompilationsIdCancelRequestObject struct {
+	Id string `json:"id"`
+}
+
+type PostCompilationsIdCancelResponseObject interface {
+	VisitPostCompilationsIdCancelResponse(w http.ResponseWriter) error
+}
+
+type PostCompilationsIdCancel200JSONResponse HandlerCompilationResponse
+
+func (response PostCompilationsIdCancel200JSONResponse) VisitPostCompilationsIdCancelResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type PostCompilationsIdCancel400JSONResponse HandlerErrBadRequestResponse
+
+func (response PostCompilationsIdCancel400JSONResponse) VisitPostCompilationsIdCancelResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(400)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type PostCompilationsIdCancel401JSONResponse HandlerErrUnauthorizedResponse
+
+func (response PostCompilationsIdCancel401JSONResponse) VisitPostCompilationsIdCancelResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type PostCompilationsIdCancel403JSONResponse HandlerErrForbiddenResponse
+
+func (response PostCompilationsIdCancel403JSONResponse) VisitPostCompilationsIdCancelResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type PostCompilationsIdCancel404JSONResponse HandlerErrNotFoundResponse
+
+func (response PostCompilationsIdCancel404JSONResponse) VisitPostCompilationsIdCancelResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type PostCompilationsIdCancel405JSONResponse HandlerErrMethodNotAllowedResponse
+
+func (response PostCompilationsIdCancel405JSONResponse) VisitPostCompilationsIdCancelResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(405)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type PostCompilationsIdCancel410JSONResponse HandlerErrGoneResponse
+
+func (response PostCompilationsIdCancel410JSONResponse) VisitPostCompilationsIdCancelResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(410)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type PostCompilationsIdCancel429JSONResponse HandlerErrRateLimitExceededResponse
+
+func (response PostCompilationsIdCancel429JSONResponse) VisitPostCompilationsIdCancelResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type PostCompilationsIdCancel500JSONResponse HandlerErrInternalServerErrorResponse
+
+func (response PostCompilationsIdCancel500JSONResponse) VisitPostCompilationsIdCancelResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type PostCompilationsIdCancel503JSONResponse HandlerErrServiceUnavailableResponse
+
+func (response PostCompilationsIdCancel503JSONResponse) VisitPostCompilationsIdCancelResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetCompilationsIdLogsRequestObject struct {
+	Id string `json:"id"`
+}
+
+type GetCompilationsIdLogsResponseObject interface {
+	VisitGetCompilationsIdLogsResponse(w http.ResponseWriter) error
+}
+
+type GetCompilationsIdLogs200JSONResponse HandlerLogsResponse
+
+func (response GetCompilationsIdLogs200JSONResponse) VisitGetCompilationsIdLogsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetCompilationsIdLogs400JSONResponse HandlerErrBadRequestResponse
+
+func (response GetCompilationsIdLogs400JSONResponse) VisitGetCompilationsIdLogsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(400)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetCompilationsIdLogs401JSONResponse HandlerErrUnauthorizedResponse
+
+func (response GetCompilationsIdLogs401JSONResponse) VisitGetCompilationsIdLogsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetCompilationsIdLogs403JSONResponse HandlerErrForbiddenResponse
+
+func (response GetCompilationsIdLogs403JSONResponse) VisitGetCompilationsIdLogsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetCompilationsIdLogs404JSONResponse HandlerErrNotFoundResponse
+
+func (response GetCompilationsIdLogs404JSONResponse) VisitGetCompilationsIdLogsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetCompilationsIdLogs405JSONResponse HandlerErrMethodNotAllowedResponse
+
+func (response GetCompilationsIdLogs405JSONResponse) VisitGetCompilationsIdLogsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(405)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetCompilationsIdLogs410JSONResponse HandlerErrGoneResponse
+
+func (response GetCompilationsIdLogs410JSONResponse) VisitGetCompilationsIdLogsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(410)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetCompilationsIdLogs429JSONResponse HandlerErrRateLimitExceededResponse
+
+func (response GetCompilationsIdLogs429JSONResponse) VisitGetCompilationsIdLogsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetCompilationsIdLogs500JSONResponse HandlerErrInternalServerErrorResponse
+
+func (response GetCompilationsIdLogs500JSONResponse) VisitGetCompilationsIdLogsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetCompilationsIdLogs503JSONResponse HandlerErrServiceUnavailableResponse
+
+func (response GetCompilationsIdLogs503JSONResponse) VisitGetCompilationsIdLogsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+// StrictServerInterface represents all server handlers.
+type StrictServerInterface interface {
+	// Get the status of the server
+	// (GET /alive)
+	GetAlive(ctx context.Context, request GetAliveRequestObject) (GetAliveResponseObject, error)
+	// Add a new compilation
+	// (POST /compilations)
+	PostCompilations(ctx context.Context, request PostCompilationsRequestObject) (PostCompilationsResponseObject, error)
+	// Get the status of a compilation
+	// (GET /compilations/{id})
+	GetCompilationsId(ctx context.Context, request GetCompilationsIdRequestObject) (GetCompilationsIdResponseObject, error)
+	// Get the compilation arfitacts
+	// (GET /compilations/{id}/artifacts)
+	GetCompilationsIdArtifacts(ctx context.Context, request GetCompilationsIdArtifactsRequestObject) (GetCompilationsIdArtifactsResponseObject, error)
+	// Stop a compilation
+	// (POST /compilations/{id}/cancel)
+	PostCompilationsIdCancel(ctx context.Context, request PostCompilationsIdCancelRequestObject) (PostCompilationsIdCancelResponseObject, error)
+	// Get the compilation logs
+	// (GET /compilations/{id}/logs)
+	GetCompilationsIdLogs(ctx context.Context, request GetCompilationsIdLogsRequestObject) (GetCompilationsIdLogsResponseObject, error)
+}
+
+type StrictHandlerFunc = strictnethttp.StrictHTTPHandlerFunc
+type StrictMiddlewareFunc = strictnethttp.StrictHTTPMiddlewareFunc
+
+type StrictHTTPServerOptions struct {
+	RequestErrorHandlerFunc  func(w http.ResponseWriter, r *http.Request, err error)
+	ResponseErrorHandlerFunc func(w http.ResponseWriter, r *http.Request, err error)
+}
+
+func NewStrictHandler(ssi StrictServerInterface, middlewares []StrictMiddlewareFunc) ServerInterface {
+	return &strictHandler{ssi: ssi, middlewares: middlewares, options: StrictHTTPServerOptions{
+		RequestErrorHandlerFunc: func(w http.ResponseWriter, r *http.Request, err error) {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+		},
+		ResponseErrorHandlerFunc: func(w http.ResponseWriter, r *http.Request, err error) {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		},
+	}}
+}
+
+func NewStrictHandlerWithOptions(ssi StrictServerInterface, middlewares []StrictMiddlewareFunc, options StrictHTTPServerOptions) ServerInterface {
+	return &strictHandler{ssi: ssi, middlewares: middlewares, options: options}
+}
+
+type strictHandler struct {
+	ssi         StrictServerInterface
+	middlewares []StrictMiddlewareFunc
+	options     StrictHTTPServerOptions
+}
+
+// GetAlive operation middleware
+func (sh *strictHandler) GetAlive(w http.ResponseWriter, r *http.Request) {
+	var request GetAliveRequestObject
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.GetAlive(ctx, request.(GetAliveRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "GetAlive")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(GetAliveResponseObject); ok {
+		if err := validResponse.VisitGetAliveResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// PostCompilations operation middleware
+func (sh *strictHandler) PostCompilations(w http.ResponseWriter, r *http.Request) {
+	var request PostCompilationsRequestObject
+
+	var body PostCompilationsJSONRequestBody
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+		sh.options.RequestErrorHandlerFunc(w, r, fmt.Errorf("can't decode JSON body: %w", err))
+		return
+	}
+	request.Body = &body
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.PostCompilations(ctx, request.(PostCompilationsRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "PostCompilations")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(PostCompilationsResponseObject); ok {
+		if err := validResponse.VisitPostCompilationsResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// GetCompilationsId operation middleware
+func (sh *strictHandler) GetCompilationsId(w http.ResponseWriter, r *http.Request, id string) {
+	var request GetCompilationsIdRequestObject
+
+	request.Id = id
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.GetCompilationsId(ctx, request.(GetCompilationsIdRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "GetCompilationsId")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(GetCompilationsIdResponseObject); ok {
+		if err := validResponse.VisitGetCompilationsIdResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// GetCompilationsIdArtifacts operation middleware
+func (sh *strictHandler) GetCompilationsIdArtifacts(w http.ResponseWriter, r *http.Request, id string, params GetCompilationsIdArtifactsParams) {
+	var request GetCompilationsIdArtifactsRequestObject
+
+	request.Id = id
+	request.Params = params
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.GetCompilationsIdArtifacts(ctx, request.(GetCompilationsIdArtifactsRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "GetCompilationsIdArtifacts")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(GetCompilationsIdArtifactsResponseObject); ok {
+		if err := validResponse.VisitGetCompilationsIdArtifactsResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// PostCompilationsIdCancel operation middleware
+func (sh *strictHandler) PostCompilationsIdCancel(w http.ResponseWriter, r *http.Request, id string) {
+	var request PostCompilationsIdCancelRequestObject
+
+	request.Id = id
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.PostCompilationsIdCancel(ctx, request.(PostCompilationsIdCancelRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "PostCompilationsIdCancel")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(PostCompilationsIdCancelResponseObject); ok {
+		if err := validResponse.VisitPostCompilationsIdCancelResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// GetCompilationsIdLogs operation middleware
+func (sh *strictHandler) GetCompilationsIdLogs(w http.ResponseWriter, r *http.Request, id string) {
+	var request GetCompilationsIdLogsRequestObject
+
+	request.Id = id
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.GetCompilationsIdLogs(ctx, request.(GetCompilationsIdLogsRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "GetCompilationsIdLogs")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(GetCompilationsIdLogsResponseObject); ok {
+		if err := validResponse.VisitGetCompilationsIdLogsResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
 }
 
 // Base64 encoded, gzipped, json marshaled Swagger object
