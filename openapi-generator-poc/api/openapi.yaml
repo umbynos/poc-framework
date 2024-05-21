@@ -1,0 +1,636 @@
+openapi: 3.0.1
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: This is the documentation for the Builder API service.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Builder API Documentation
+  version: "2.0"
+servers:
+- url: //localhost:8080/v1
+paths:
+  /alive:
+    get:
+      description: Get the status of the server
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.AliveResponse'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.ErrBadRequestResponse'
+          description: Bad Request
+        "405":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.ErrMethodNotAllowedResponse'
+          description: Method Not Allowed
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.ErrInternalServerErrorResponse'
+          description: Internal Server Error
+        "503":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.ErrServiceUnavailableResponse'
+          description: Service Unavailable
+      summary: Get the status of the server
+      tags:
+      - status
+  /compilations:
+    post:
+      description: Add a new compilation to the queue
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/handler.Compilation'
+        description: Compilation object that needs to be added to the queue
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.CompilationResponse'
+          description: Created
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.ErrBadRequestResponse'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.ErrUnauthorizedResponse'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.ErrForbiddenResponse'
+          description: Forbidden
+        "405":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.ErrMethodNotAllowedResponse'
+          description: Method Not Allowed
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.ErrRateLimitExceededResponse'
+          description: Too Many Requests
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.ErrInternalServerErrorResponse'
+          description: Internal Server Error
+        "503":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.ErrServiceUnavailableResponse'
+          description: Service Unavailable
+      summary: Add a new compilation
+      tags:
+      - compilation
+      x-codegen-request-body-name: value
+  /compilations/{id}:
+    get:
+      description: Get the status of a compilation
+      parameters:
+      - description: Compilation object we want to know the status of
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.CompilationResponse'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.ErrBadRequestResponse'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.ErrUnauthorizedResponse'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.ErrForbiddenResponse'
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.ErrNotFoundResponse'
+          description: Not Found
+        "405":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.ErrMethodNotAllowedResponse'
+          description: Method Not Allowed
+        "410":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.ErrGoneResponse'
+          description: Gone
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.ErrRateLimitExceededResponse'
+          description: Too Many Requests
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.ErrInternalServerErrorResponse'
+          description: Internal Server Error
+        "503":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.ErrServiceUnavailableResponse'
+          description: Service Unavailable
+      summary: Get the status of a compilation
+      tags:
+      - compilation
+  /compilations/{id}/artifacts:
+    get:
+      description: Get the compilation artifacts
+      parameters:
+      - description: Compilation object we want to retrieve the artifacts of
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: "Type of artifact we want to retrieve: bin, elf, hex"
+        explode: true
+        in: query
+        name: type
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.ArtifactResponse'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.ErrBadRequestResponse'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.ErrUnauthorizedResponse'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.ErrForbiddenResponse'
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.ErrNotFoundResponse'
+          description: Not Found
+        "405":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.ErrMethodNotAllowedResponse'
+          description: Method Not Allowed
+        "410":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.ErrGoneResponse'
+          description: Gone
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.ErrRateLimitExceededResponse'
+          description: Too Many Requests
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.ErrInternalServerErrorResponse'
+          description: Internal Server Error
+        "503":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.ErrServiceUnavailableResponse'
+          description: Service Unavailable
+      summary: Get the compilation arfitacts
+      tags:
+      - compilation
+  /compilations/{id}/cancel:
+    post:
+      description: Stop a compilation in the queue
+      parameters:
+      - description: Compilation object that needs to be stopped
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.CompilationResponse'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.ErrBadRequestResponse'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.ErrUnauthorizedResponse'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.ErrForbiddenResponse'
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.ErrNotFoundResponse'
+          description: Not Found
+        "405":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.ErrMethodNotAllowedResponse'
+          description: Method Not Allowed
+        "410":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.ErrGoneResponse'
+          description: Gone
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.ErrRateLimitExceededResponse'
+          description: Too Many Requests
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.ErrInternalServerErrorResponse'
+          description: Internal Server Error
+        "503":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.ErrServiceUnavailableResponse'
+          description: Service Unavailable
+      summary: Stop a compilation
+      tags:
+      - compilation
+  /compilations/{id}/logs:
+    get:
+      description: Get the compilation logs
+      parameters:
+      - description: Compilation object we want to retrieve the logs of
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.LogsResponse'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.ErrBadRequestResponse'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.ErrUnauthorizedResponse'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.ErrForbiddenResponse'
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.ErrNotFoundResponse'
+          description: Not Found
+        "405":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.ErrMethodNotAllowedResponse'
+          description: Method Not Allowed
+        "410":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.ErrGoneResponse'
+          description: Gone
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.ErrRateLimitExceededResponse'
+          description: Too Many Requests
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.ErrInternalServerErrorResponse'
+          description: Internal Server Error
+        "503":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.ErrServiceUnavailableResponse'
+          description: Service Unavailable
+      summary: Get the compilation logs
+      tags:
+      - compilation
+components:
+  schemas:
+    handler.AliveResponse:
+      description: AliveResponse represents a response for the alive endpoint
+      example:
+        message: OK
+      properties:
+        message:
+          example: OK
+          type: string
+      type: object
+    handler.ArtifactResponse:
+      description: ArtifactResponse represents a response for a compilation artifacts
+        request
+      example:
+        bin: YmluYXJ5IGRhdGE=
+        name: test
+        hex: aGV4IGRhdGE=
+        elf: ZWxmIGRhdGE=
+      properties:
+        bin:
+          example: YmluYXJ5IGRhdGE=
+          type: string
+        elf:
+          example: ZWxmIGRhdGE=
+          type: string
+        hex:
+          example: aGV4IGRhdGE=
+          type: string
+        name:
+          example: test
+          type: string
+      type: object
+    handler.Compilation:
+      description: Compilation represents a compilation request
+      properties:
+        fqbn:
+          example: arduino:avr:uno
+          type: string
+        ota:
+          example: false
+          type: boolean
+        sketch:
+          allOf:
+          - $ref: '#/components/schemas/handler.Sketch'
+          description: "Path\tstring `json:\"path\"`"
+          type: object
+        verbose:
+          example: false
+          type: boolean
+      type: object
+    handler.CompilationResponse:
+      description: CompilationResponse represents a response for a compilation request
+      example:
+        id: 123e4567-e89b-12d3-a456-426614174000
+        status: created
+      properties:
+        id:
+          example: 123e4567-e89b-12d3-a456-426614174000
+          type: string
+        status:
+          example: created
+          type: string
+      type: object
+    handler.ErrBadRequestResponse:
+      description: ErrBadRequestResponse represents a bad request response
+      example:
+        err: bad request
+      properties:
+        err:
+          example: bad request
+          type: string
+      type: object
+    handler.ErrForbiddenResponse:
+      description: ErrForbiddenResponse represents a forbidden response
+      example:
+        err: forbidden
+      properties:
+        err:
+          example: forbidden
+          type: string
+      type: object
+    handler.ErrGoneResponse:
+      description: ErrGoneResponse represents a gone response
+      example:
+        err: gone
+      properties:
+        err:
+          example: gone
+          type: string
+      type: object
+    handler.ErrInternalServerErrorResponse:
+      description: ErrInternalServerErrorResponse represents an internal server error
+        response
+      example:
+        err: internal server error
+      properties:
+        err:
+          example: internal server error
+          type: string
+      type: object
+    handler.ErrMethodNotAllowedResponse:
+      description: ErrMethodNotAllowedResponse represents a method not allowed response
+      example:
+        err: method not allowed
+      properties:
+        err:
+          example: method not allowed
+          type: string
+      type: object
+    handler.ErrNotFoundResponse:
+      description: ErrNotFoundResponse represents a not found response
+      example:
+        err: not found
+      properties:
+        err:
+          example: not found
+          type: string
+      type: object
+    handler.ErrRateLimitExceededResponse:
+      description: ErrRateLimitExceededResponse represents a rate limit exceeded response
+      example:
+        err: rate limit exceeded
+      properties:
+        err:
+          example: rate limit exceeded
+          type: string
+      type: object
+    handler.ErrServiceUnavailableResponse:
+      description: ErrServiceUnavailableResponse represents a service unavailable
+        response
+      example:
+        err: service unavailable
+      properties:
+        err:
+          example: service unavailable
+          type: string
+      type: object
+    handler.ErrUnauthorizedResponse:
+      description: ErrUnauthorizedResponse represents an unauthorized response
+      example:
+        err: unauthorized
+      properties:
+        err:
+          example: unauthorized
+          type: string
+      type: object
+    handler.File:
+      description: File represents a file to be compiled
+      properties:
+        data:
+          example: |-
+            #include <Arduino.h>
+            void setup() {}
+            void loop() {}
+          type: string
+        name:
+          example: test.ino
+          type: string
+      type: object
+    handler.IncludedLibraries:
+      description: IncludedLibraries represents the libraries to be included in the
+        compilation
+      properties:
+        included_libs:
+          items:
+            $ref: '#/components/schemas/handler.Library'
+          type: array
+      type: object
+    handler.Library:
+      description: Library represents a library to be included in the compilation
+      properties:
+        name:
+          example: ArduinoJson
+          type: string
+        version:
+          example: 6.17.2
+          type: string
+      type: object
+    handler.LogsResponse:
+      description: LogsResponse represents a response for a compilation logs request
+      example:
+        stdout: "Hello, World!"
+        stderr: "Error: World not found"
+      properties:
+        stderr:
+          example: "Error: World not found"
+          type: string
+        stdout:
+          example: "Hello, World!"
+          type: string
+      type: object
+    handler.Sketch:
+      description: Sketch represents a sketch to be compiled
+      properties:
+        files:
+          items:
+            $ref: '#/components/schemas/handler.File'
+          type: array
+        ino:
+          $ref: '#/components/schemas/handler.File'
+        metadata:
+          $ref: '#/components/schemas/handler.IncludedLibraries'
+        name:
+          example: test
+          type: string
+      type: object
+x-original-swagger-version: "2.0"
