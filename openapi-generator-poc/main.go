@@ -16,6 +16,7 @@ func main() {
 	StatusAPIController := openapi.NewStatusAPIController(StatusAPIService)
 
 	router := openapi.NewRouter(CompilationAPIController, StatusAPIController)
+	router.Handle("/v1/docs/", http.StripPrefix("/v1/docs/", http.FileServer(http.Dir("./docs"))))
 
 	log.Fatal(http.ListenAndServe(":8080", router))
 }

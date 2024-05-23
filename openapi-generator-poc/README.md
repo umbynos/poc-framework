@@ -17,8 +17,11 @@ https://openapi-generator.tech/docs/generators/go-server
 ## Generate the server boilerplate
 `openapi-generator generate -i api.yaml -g go-server`
 
+## Generate the docs
+`openapi-generator generate -i api.yaml -g html2 -o docs/`
+
 ## Start the POC
 `go run openapi-generator-poc`
 
 ## Navigate to the doc
-<!-- TODO -->
+http://localhost:8080/v1/docs/
